@@ -1,3 +1,5 @@
+USE [CopyOfAdventureWorks2019]
+GO
 IF EXISTS(SELECT 1 FROM sys.Procedures WHERE[object_id] = OBJECT_ID('[dbo].[regression]')) DROP PROCEDURE [dbo].[regression]
 GO
 CREATE   PROCEDURE [dbo].[regression]

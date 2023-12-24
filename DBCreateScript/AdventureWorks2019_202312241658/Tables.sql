@@ -1,3 +1,5 @@
+USE [CopyOfAdventureWorks2019]
+GO
 IF EXISTS(SELECT 1 FROM sys.Tables WHERE[object_id] = OBJECT_ID('[dbo].[DatabaseLog]')) DROP Table [dbo].[DatabaseLog]
 GO
 CREATE TABLE [dbo].[DatabaseLog](	  [DatabaseLogID] INT NOT NULL IDENTITY(1,1)	, [PostTime] DATETIME NOT NULL	, [DatabaseUser] SYSNAME COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL	, [Event] SYSNAME COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL	, [Schema] SYSNAME COLLATE SQL_Latin1_General_CP1_CI_AS NULL	, [Object] SYSNAME COLLATE SQL_Latin1_General_CP1_CI_AS NULL	, [TSQL] NVARCHAR(MAX) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL	, [XmlEvent] XML NOT NULL	, CONSTRAINT [PK_DatabaseLog_DatabaseLogID] PRIMARY KEY ([DatabaseLogID] ASC))

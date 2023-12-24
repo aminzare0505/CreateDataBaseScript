@@ -5,3 +5,10 @@ G:\KamaProject\Helper\CreateDbCreateScript\GetDBScript\GetDBScript\obj\Debug\Get
 G:\KamaProject\Helper\CreateDbCreateScript\GetDBScript\GetDBScript\obj\Debug\GetDBScript.csproj.CoreCompileInputs.cache
 G:\KamaProject\Helper\CreateDbCreateScript\GetDBScript\GetDBScript\obj\Debug\GetDBScript.exe
 G:\KamaProject\Helper\CreateDbCreateScript\GetDBScript\GetDBScript\obj\Debug\GetDBScript.pdb
+G:\ZareProjects\CreateDataBaseScript\GetDBScript\obj\Debug\GetDBScript.csproj.AssemblyReference.cache
+G:\ZareProjects\CreateDataBaseScript\GetDBScript\obj\Debug\GetDBScript.csproj.CoreCompileInputs.cache
+G:\ZareProjects\CreateDataBaseScript\GetDBScript\obj\Debug\GetDBScript.exe
+G:\ZareProjects\CreateDataBaseScript\GetDBScript\obj\Debug\GetDBScript.pdb
+G:\ZareProjects\CreateDataBaseScript\GetDBScript\bin\Debug\GetDBScript.exe.config
+G:\ZareProjects\CreateDataBaseScript\GetDBScript\bin\Debug\GetDBScript.exe
+G:\ZareProjects\CreateDataBaseScript\GetDBScript\bin\Debug\GetDBScript.pdb

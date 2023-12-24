@@ -10,19 +10,10 @@ namespace GetDBScript
 {
     internal class Program
     {
-        
+        private static string _connectionString= "data source=.;initial catalog=AdventureWorks2019;integrated security=True;MultipleActiveResultSets=True;";
         static void Main(string[] args)
         { 
-            new GenerateScript().Generate();
-        }
-        private static void SaveFile(string filenmame, string sql)
-        {
-            if (!string.IsNullOrWhiteSpace(filenmame))
-            {
-                using (var fs = new FileStream(filenmame, FileMode.Create))
-                using (var writer = new StreamWriter(fs))
-                    writer.Write(sql);
-            }
+            new GenerateScript(_connectionString).Generate();
         }
     }
 }

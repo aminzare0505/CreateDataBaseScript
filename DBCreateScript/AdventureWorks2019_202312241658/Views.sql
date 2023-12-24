@@ -1,3 +1,5 @@
+USE [CopyOfAdventureWorks2019]
+GO
 IF EXISTS(SELECT 1 FROM sys.views  WHERE[object_id] = OBJECT_ID('[HumanResources].[vEmployee]')) DROP VIEW [HumanResources].[vEmployee]
 GO
 

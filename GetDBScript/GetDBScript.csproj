@@ -45,12 +45,13 @@
   <ItemGroup>
     <Compile Include="DataSourse\DataSource.cs" />
     <Compile Include="FileTools\Utility.cs" />
-    <Compile Include="GenerateScript.cs" />
+    <Compile Include="Generate\GenerateScript.cs" />
     <Compile Include="Model\DatabaseInfo.cs" />
     <Compile Include="Model\ListModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="SQLQueries\GetTables.sql" />
+    <Compile Include="Services\CreateScript.cs" />
     <Compile Include="SQLQueries\SQLQueryFactory.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,37 +2,25 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GetDBScript
+namespace GetDBScript.Services
 {
-    public class GenerateScript
+    public abstract class CreateScript
     {
-        private static string _connectionString = "data source=.;initial catalog=AdventureWorks2019;integrated security=True;MultipleActiveResultSets=True;";
-        private StringBuilder _allScriptSb = new StringBuilder();
+       private StringBuilder _allScriptSb = new StringBuilder();
+        Utility utility;
         string NewDataBaseName;
         string _folderPath;
-        Utility utility;
-        public GenerateScript()
+        public CreateScript(string connectionString)
         {
-            NewDataBaseName = $"CopyOf{new SqlConnectionStringBuilder(_connectionString).InitialCatalog}";
-            utility = new Utility( _connectionString);
+            utility = new Utility(connectionString);
+            NewDataBaseName = $"CopyOf{new SqlConnectionStringBuilder(connectionString).InitialCatalog}";
             _folderPath = utility.CheckPathAndCreate();
-
         }
-        public void Generate()
-        {
-            CreateFunctionScript();
-            CreateSynonymsScript();
-            CreateSchemaScript();
-            CreateTableScript();
-            CreateViewScript();
-            CreateProcScript();
-        }
-        private void CreateTableScript()
+        public void CreateTableScript()
         {
             StringBuilder TableSb = new StringBuilder();
             TableSb.AppendLine($"USE [{NewDataBaseName}]");
@@ -48,7 +36,7 @@ namespace GetDBScript
             _allScriptSb.AppendLine(TableSb.ToString());
             utility.SaveFile(utility.GetFilePath("Tables", _folderPath), TableSb.ToString());
         }
-        private void CreateSynonymsScript()
+        public void CreateSynonymsScript()
         {
             StringBuilder SynonymSb = new StringBuilder();
             SynonymSb.AppendLine($"USE [{NewDataBaseName}]");
@@ -64,7 +52,7 @@ namespace GetDBScript
             _allScriptSb.AppendLine(SynonymSb.ToString());
             utility.SaveFile(utility.GetFilePath("Synonyms", _folderPath), SynonymSb.ToString());
         }
-        private void CreateViewScript()
+        public void CreateViewScript()
         {
             StringBuilder ViewSb = new StringBuilder();
             ViewSb.AppendLine($"USE [{NewDataBaseName}]");
@@ -80,7 +68,7 @@ namespace GetDBScript
             _allScriptSb.AppendLine(ViewSb.ToString());
             utility.SaveFile(utility.GetFilePath("Views", _folderPath), ViewSb.ToString());
         }
-        private void CreateSchemaScript()
+        public void CreateSchemaScript()
         {
             StringBuilder SchemaSb = new StringBuilder();
             SchemaSb.AppendLine($"USE [{NewDataBaseName}]");
@@ -96,7 +84,7 @@ namespace GetDBScript
             _allScriptSb.AppendLine(SchemaSb.ToString());
             utility.SaveFile(utility.GetFilePath("Schemas", _folderPath), SchemaSb.ToString());
         }
-        private void CreateProcScript()
+        public void CreateProcScript()
         {
             StringBuilder ProceduresSb = new StringBuilder();
             ProceduresSb.AppendLine($"USE [{NewDataBaseName}]");
@@ -112,7 +100,7 @@ namespace GetDBScript
             _allScriptSb.AppendLine(ProceduresSb.ToString());
             utility.SaveFile(utility.GetFilePath("Procedures", _folderPath), ProceduresSb.ToString());
         }
-        private void CreateFunctionScript()
+        public void CreateFunctionScript()
         {
             StringBuilder FunctionSb = new StringBuilder();
             FunctionSb.AppendLine($"USE [{NewDataBaseName}]");
@@ -128,8 +116,9 @@ namespace GetDBScript
             _allScriptSb.AppendLine(FunctionSb.ToString());
             utility.SaveFile(utility.GetFilePath("Functions", _folderPath), FunctionSb.ToString());
         }
-
-       
-
+        public void CreateAllScript()
+        {
+            utility.SaveFile(utility.GetFilePath("All", _folderPath), _allScriptSb.ToString());
+        }
     }
 }
