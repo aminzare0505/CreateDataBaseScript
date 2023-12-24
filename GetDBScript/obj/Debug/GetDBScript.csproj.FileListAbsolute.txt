@@ -1,0 +1,7 @@
+G:\KamaProject\Helper\CreateDbCreateScript\GetDBScript\GetDBScript\bin\Debug\GetDBScript.exe.config
+G:\KamaProject\Helper\CreateDbCreateScript\GetDBScript\GetDBScript\bin\Debug\GetDBScript.exe
+G:\KamaProject\Helper\CreateDbCreateScript\GetDBScript\GetDBScript\bin\Debug\GetDBScript.pdb
+G:\KamaProject\Helper\CreateDbCreateScript\GetDBScript\GetDBScript\obj\Debug\GetDBScript.csproj.AssemblyReference.cache
+G:\KamaProject\Helper\CreateDbCreateScript\GetDBScript\GetDBScript\obj\Debug\GetDBScript.csproj.CoreCompileInputs.cache
+G:\KamaProject\Helper\CreateDbCreateScript\GetDBScript\GetDBScript\obj\Debug\GetDBScript.exe
+G:\KamaProject\Helper\CreateDbCreateScript\GetDBScript\GetDBScript\obj\Debug\GetDBScript.pdb
