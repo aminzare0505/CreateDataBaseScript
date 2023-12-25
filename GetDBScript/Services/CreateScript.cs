@@ -1,4 +1,5 @@
 ﻿using GetDBScript.FileTools;
+using GetDBScript.Model;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -14,10 +15,10 @@ namespace GetDBScript.Services
         Utility utility;
         string NewDataBaseName;
         string _folderPath;
-        public CreateScript(string connectionString)
+        public CreateScript()
         {
-            utility = new Utility(connectionString);
-            NewDataBaseName = $"CopyOf{new SqlConnectionStringBuilder(connectionString).InitialCatalog}";
+            utility = new Utility(ConnectionString.Value);
+            NewDataBaseName = $"CopyOf{new SqlConnectionStringBuilder(ConnectionString.Value).InitialCatalog}";
             _folderPath = utility.CheckPathAndCreate();
         }
         public void CreateTableScript()

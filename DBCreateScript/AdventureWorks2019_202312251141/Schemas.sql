@@ -1,5 +1,11 @@
 USE [CopyOfAdventureWorks2019]
 GO
+IF NOT EXISTS(SELECT * FROM sys.schemas WHERE name = 'HumanResources')
+BEGIN
+EXEC('CREATE SCHEMA  HumanResources')
+END
+
+GO
 IF NOT EXISTS(SELECT * FROM sys.schemas WHERE name = 'Person')
 BEGIN
 EXEC('CREATE SCHEMA  Person')

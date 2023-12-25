@@ -1,5 +1,11 @@
 USE [CopyOfAdventureWorks2019]
 GO
+IF NOT EXISTS(SELECT * FROM sys.schemas WHERE name = 'HumanResources')
+BEGIN
+EXEC('CREATE SCHEMA  HumanResources')
+END
+
+GO
 IF NOT EXISTS(SELECT * FROM sys.schemas WHERE name = 'Person')
 BEGIN
 EXEC('CREATE SCHEMA  Person')
@@ -44,6 +50,11 @@ END
 GO
 
 USE [CopyOfAdventureWorks2019]
+GO
+IF EXISTS(SELECT 1 FROM sys.Tables WHERE[object_id] = OBJECT_ID('[dbo].[AWBuildVersion]')) DROP Table [dbo].[AWBuildVersion]
+GO
+CREATE TABLE [dbo].[AWBuildVersion](	  [SystemInformationID] TINYINT NOT NULL IDENTITY(1,1)	, [Database Version] NVARCHAR(25) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL	, [VersionDate] DATETIME NOT NULL	, [ModifiedDate] DATETIME NOT NULL DEFAULT(getdate())	, CONSTRAINT [PK_AWBuildVersion_SystemInformationID] PRIMARY KEY ([SystemInformationID] ASC))
+
 GO
 IF EXISTS(SELECT 1 FROM sys.Tables WHERE[object_id] = OBJECT_ID('[dbo].[DatabaseLog]')) DROP Table [dbo].[DatabaseLog]
 GO
@@ -425,11 +436,33 @@ USE [CopyOfAdventureWorks2019]
 GO
 IF EXISTS(SELECT 1 FROM sys.synonyms  WHERE[object_id] = OBJECT_ID('[HumanResources].[Action]')) DROP SYNONYM [HumanResources].[Action]
 GO
-CREATE SYNONYM [HumanResources].[Action] FOR [Administrator].[dbo].[ScriptDetail]
+CREATE SYNONYM [HumanResources].[Action] FOR 
 
 GO
 
 USE [CopyOfAdventureWorks2019]
+GO
+IF EXISTS(SELECT 1 FROM sys.views  WHERE[object_id] = OBJECT_ID('[dbo].[TestForIndex]')) DROP VIEW [dbo].[TestForIndex]
+GO
+create   view TestForIndex
+
+with schemabinding
+
+as
+
+SELECT [BusinessEntityID]
+
+      ,[EmailAddressID]
+
+      ,[EmailAddress]
+
+      
+
+  FROM [Person].[EmailAddress]
+
+  LEFT JOIN [Sales].[SpecialOfferProduct] s ON [BusinessEntityID]= s.ProductID
+
+
 GO
 IF EXISTS(SELECT 1 FROM sys.views  WHERE[object_id] = OBJECT_ID('[HumanResources].[vEmployee]')) DROP VIEW [HumanResources].[vEmployee]
 GO
@@ -3069,6 +3102,24 @@ GO
 
 USE [CopyOfAdventureWorks2019]
 GO
+DROP FUNCTION IF EXISTS [dbo].[ufnGetAccountingStartDate]
+GO
+
+
+CREATE FUNCTION [dbo].[ufnGetAccountingStartDate]()
+
+RETURNS [datetime] 
+
+AS 
+
+BEGIN
+
+    RETURN CONVERT(datetime, '20030701', 112);
+
+END;
+
+
+GO
 DROP FUNCTION IF EXISTS [dbo].[ufnLeadingZeros]
 GO
 
@@ -3706,6 +3757,18 @@ GO
 
 USE [CopyOfAdventureWorks2019]
 GO
+IF EXISTS(SELECT 1 FROM sys.Procedures WHERE[object_id] = OBJECT_ID('[dbo].[GetSynonym]')) DROP PROCEDURE [dbo].[GetSynonym]
+GO
+Create   PROC GetSynonym
+
+AS
+
+select sy.name [Name],sc.name [SchemaName],sy.base_object_name [Refrence] from sys.synonyms sy
+
+inner join sys.schemas sc on sc.schema_id=sy.schema_id
+
+
+GO
 IF EXISTS(SELECT 1 FROM sys.Procedures WHERE[object_id] = OBJECT_ID('[dbo].[regression]')) DROP PROCEDURE [dbo].[regression]
 GO
 CREATE   PROCEDURE [dbo].[regression]
@@ -3729,6 +3792,24 @@ where ProductID= @packagetypeid', N'@packagetypeid int', @packagetypeid =@packag
 END
 
 END
+
+GO
+IF EXISTS(SELECT 1 FROM sys.Procedures WHERE[object_id] = OBJECT_ID('[dbo].[spGetSchema]')) DROP PROCEDURE [dbo].[spGetSchema]
+GO
+CREATE   PROC spGetSchema 
+
+AS
+
+BEGIN
+
+select [name] [Name],'' AS SchemaName from sys.schemas
+
+where principal_id=1 and name<>'dbo'
+
+
+
+END
+
 
 GO
 IF EXISTS(SELECT 1 FROM sys.Procedures WHERE[object_id] = OBJECT_ID('[dbo].[spGetTableScript]')) DROP PROCEDURE [dbo].[spGetTableScript]

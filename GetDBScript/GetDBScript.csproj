@@ -44,8 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataSourse\DataSource.cs" />
+    <Compile Include="DataSourse\SqlExecute.cs" />
     <Compile Include="FileTools\Utility.cs" />
     <Compile Include="Generate\GenerateScript.cs" />
+    <Compile Include="Model\ConnectionString.cs" />
     <Compile Include="Model\DatabaseInfo.cs" />
     <Compile Include="Model\ListModel.cs" />
     <Compile Include="Program.cs" />

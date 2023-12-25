@@ -1,5 +1,27 @@
 USE [CopyOfAdventureWorks2019]
 GO
+IF EXISTS(SELECT 1 FROM sys.views  WHERE[object_id] = OBJECT_ID('[dbo].[TestForIndex]')) DROP VIEW [dbo].[TestForIndex]
+GO
+create   view TestForIndex
+
+with schemabinding
+
+as
+
+SELECT [BusinessEntityID]
+
+      ,[EmailAddressID]
+
+      ,[EmailAddress]
+
+      
+
+  FROM [Person].[EmailAddress]
+
+  LEFT JOIN [Sales].[SpecialOfferProduct] s ON [BusinessEntityID]= s.ProductID
+
+
+GO
 IF EXISTS(SELECT 1 FROM sys.views  WHERE[object_id] = OBJECT_ID('[HumanResources].[vEmployee]')) DROP VIEW [HumanResources].[vEmployee]
 GO
 

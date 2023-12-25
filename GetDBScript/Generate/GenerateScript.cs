@@ -14,11 +14,6 @@ namespace GetDBScript
     {
         //private static string _connectionString; //= "data source=.;initial catalog=AdventureWorks2019;integrated security=True;MultipleActiveResultSets=True;";
 
-       
-        public GenerateScript(string connectionString) :base(connectionString)
-        {
-        }
-        
         public void Generate()
         {
             CreateSchemaScript();

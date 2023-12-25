@@ -9,140 +9,63 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using System.Xml.Linq;
+using System.Data.SqlTypes;
+using GetDBScript.DataSourse;
 
 namespace GetDBScript
 {
 
     public class DataSource
     {
-        private static string _connectionString = "data source=.;initial catalog=AdventureWorks2019;integrated security=True;MultipleActiveResultSets=True;";
-
         public List<ListModel> GetAllTable()
         {
-            string Query = GetSQL("GetTables");
-            return SqlExecute.ExecuteQuery(Query);
+            return SqlExecute.ExecuteProcedure("GetTables");
         }
         public List<ListModel> GetAllSchema()
         {
-            string Query = GetSQL("GetSchemas");
-            return SqlExecute.ExecuteQuery(Query);
+            return SqlExecute.ExecuteProcedure("GetSchemas");
         }
         public List<ListModel> GetAllProcedures()
         {
-            string Query = GetSQL("GetProcedures");
-            return SqlExecute.ExecuteQuery(Query);
+            return SqlExecute.ExecuteProcedure("GetProcedures");
         }
 
         public List<ListModel> GetAllView()
         {
-            string Query = GetSQL("GetViews");
-            return SqlExecute.ExecuteQuery(Query);
+
+            return SqlExecute.ExecuteProcedure("GetViews");
         }
         public List<ListModel> GetAllSynonym()
         {
-            string Query = GetSQL("GetSynonyms");
-            SqlExecute.ExecuteQuery(Query, OnlyEcecute: true);
-            List<ListModel> Result = new List<ListModel>();
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            {
-                using (SqlCommand cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "GetSynonym";//Stored Procedure name
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    con.Open();
-
-                    using (SqlDataReader rdr = cmd.ExecuteReader())
-                    {
-                        while (rdr.Read())
-                        {
-                            Result.Add(new ListModel() { Name = rdr["Name"].ToString(), SchemaName = rdr["SchemaName"].ToString(), Refrence = rdr["Refrence"].ToString() });
-                            //sb.AppendLine(rdr["Text"].ToString());
-                            /* 
-                                You will get the CREATE PROC text here
-                                Do what you need to with it. For example, write
-                                to a .sql file
-                            */
-                        }
-                    }
-                }
-            }
-            return Result;
+            return SqlExecute.ExecuteProcedure("GetSynonyms");
         }
         public List<ListModel> GetAllFunction()
         {
-            string Query = GetSQL("GetFunctions");
-            return SqlExecute.ExecuteQuery(Query);
+            return SqlExecute.ExecuteProcedure("GetFunctions");
         }
 
         public string GetTableScript(string tableName, string schema)
         {
-            string Query = GetSQL("GetTableScript");
-             SqlExecute.ExecuteQuery(Query,true);
+
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"IF EXISTS(SELECT 1 FROM sys.Tables WHERE[object_id] = OBJECT_ID('[{schema}].[{tableName}]')) DROP Table [{schema}].[{tableName}]");
             sb.AppendLine("GO");
             var saf = sb.ToString();
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            {
-                using (SqlCommand cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "spGetTableScript @TableName";//Stored Procedure name
-                    cmd.CommandType = CommandType.Text;
-
-                    cmd.Parameters.AddWithValue("TableName", $"[{schema}].[{tableName}]");
-
-                    con.Open();
-
-                    using (SqlDataReader rdr = cmd.ExecuteReader())
-                    {
-                        while (rdr.Read())
-                        {
-                            sb.AppendLine(rdr["Text"].ToString());
-                            /* 
-                                You will get the CREATE PROC text here
-                                Do what you need to with it. For example, write
-                                to a .sql file
-                            */
-                        }
-                    }
-                }
-            }
+            SqlExecute.GetTableScript(tableName, schema, sb);
             return sb.ToString();
         }
+
+
+
         public string GetProcedureScript(string procedureName, string schema)
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"IF EXISTS(SELECT 1 FROM sys.Procedures WHERE[object_id] = OBJECT_ID('[{schema}].[{procedureName}]')) DROP PROCEDURE [{schema}].[{procedureName}]");
             sb.AppendLine("GO");
-            var saf = sb.ToString();
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            {
-                using (SqlCommand cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "sp_helptext @procName";//Stored Procedure name
-                    cmd.CommandType = CommandType.Text;
-
-                    cmd.Parameters.AddWithValue("procName", $"[{schema}].[{procedureName}]");
-
-                    con.Open();
-
-                    using (SqlDataReader rdr = cmd.ExecuteReader())
-                    {
-                        while (rdr.Read())
-                        {
-                            sb.AppendLine(rdr["Text"].ToString());
-                            /* 
-                                You will get the CREATE PROC text here
-                                Do what you need to with it. For example, write
-                                to a .sql file
-                            */
-                        }
-                    }
-                }
-            }
+            SqlExecute.GetProcedureScript(procedureName, schema, sb);
             return sb.ToString();
         }
+
         public string GetSchemaScript(string schemaName)
         {
             StringBuilder sb = new StringBuilder();
@@ -158,35 +81,12 @@ namespace GetDBScript
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"IF EXISTS(SELECT 1 FROM sys.views  WHERE[object_id] = OBJECT_ID('[{schema}].[{viewName}]')) DROP VIEW [{schema}].[{viewName}]");
             sb.AppendLine("GO");
-            var saf = sb.ToString();
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            {
-                using (SqlCommand cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "sp_helptext @viewName";//Stored Procedure name
-                    cmd.CommandType = CommandType.Text;
-
-                    cmd.Parameters.AddWithValue("viewName", $"[{schema}].[{viewName}]");
-
-                    con.Open();
-
-                    using (SqlDataReader rdr = cmd.ExecuteReader())
-                    {
-                        while (rdr.Read())
-                        {
-                            sb.AppendLine(rdr["Text"].ToString());
-                            /* 
-                                You will get the CREATE PROC text here
-                                Do what you need to with it. For example, write
-                                to a .sql file
-                            */
-                        }
-                    }
-                }
-            }
+            SqlExecute.GetViewScript(viewName, schema, sb);
             return sb.ToString();
         }
-        
+
+
+
         public string GetSynonymScript(ListModel listModel)
         {
             StringBuilder sb = new StringBuilder();
@@ -200,83 +100,106 @@ namespace GetDBScript
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}]");
             sb.AppendLine("GO");
-            var saf = sb.ToString();
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            {
-                using (SqlCommand cmd = con.CreateCommand())
-                {
-                    cmd.CommandText = "sp_helptext @funName";//Stored Procedure name
-                    cmd.CommandType = CommandType.Text;
-
-                    cmd.Parameters.AddWithValue("funName", $"[{schema}].[{functionName}]");
-
-                    con.Open();
-
-                    using (SqlDataReader rdr = cmd.ExecuteReader())
-                    {
-                        while (rdr.Read())
-                        {
-                            sb.AppendLine(rdr["Text"].ToString());
-                            /* 
-                                You will get the CREATE PROC text here
-                                Do what you need to with it. For example, write
-                                to a .sql file
-                            */
-                        }
-                    }
-                }
-            }
+            SqlExecute.GetFunctionScript(functionName, schema, sb);
             return sb.ToString();
         }
 
-        private static string GetSQL(string name)
-        {
-            return SQLQueries.SQLQueryFactory.Get(name);
-        }
 
-        private string GetResult(string name)
-        {
-            return SQLQueries.SQLQueryFactory.Get(name);
-        }
+
+
     }
 
-    public static class SqlExecute
-    {
-        private static string _connectionString = "data source=.;initial catalog=AdventureWorks2019;integrated security=True;MultipleActiveResultSets=True;";
-        public static List<ListModel> ExecuteQuery(string query,bool OnlyEcecute=false)
-        {
-            List<ListModel> Result = new List<ListModel>();
-            SqlConnection conn = null;
-            SqlCommand cmd = null;
-            //  SqlParameter[] parameters = new SqlParameter[]
-            using (conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                using (cmd = new SqlCommand(query, conn))
-                {
-                    //cmd.Parameters.AddRange(parameters);
-                    //cmd.ExecuteNonQuery();
-                    if (OnlyEcecute)
-                        cmd.ExecuteNonQuery();
-                    else
-                    {
-                       
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                var res = reader.Read();
-                                while (reader.Read())
-                                {
-                                    Result.Add(new ListModel() { Name = reader["Name"].ToString(), SchemaName = reader["SchemaName"].ToString() });
-                                }
-                            }
-                        
-                        
-                    }
-                    
+    //public static class SqlExecute
+    //{
+    //    private static string _connectionString = "data source=.;initial catalog=AdventureWorks2019;integrated security=True;MultipleActiveResultSets=True;";
+    //    public static List<ListModel> ExecuteQuery(string query,bool OnlyEcecute=false)
+    //    {
+    //        List<ListModel> Result = new List<ListModel>();
+    //        SqlConnection conn = null;
+    //        SqlCommand cmd = null;
+    //        //  SqlParameter[] parameters = new SqlParameter[]
+    //        using (conn = new SqlConnection(_connectionString))
+    //        {
+    //            conn.Open();
+    //            using (cmd = new SqlCommand(query,conn))
+    //            {
+    //                //cmd.Parameters.AddRange(parameters);
+    //                //cmd.ExecuteNonQuery();
+    //                cmd.CommandText= query;
+    //                cmd.CommandType = CommandType.Text;
+    //                if (OnlyEcecute)
+    //                    cmd.ExecuteNonQuery();
+    //                else
+    //                {
 
-                }
-            }
-            return Result;
-        }
-    }
+    //                        using (SqlDataReader reader = cmd.ExecuteReader())
+    //                        {
+    //                            var res = reader.Read();
+    //                            while (reader.Read())
+    //                            {
+    //                                Result.Add(new ListModel() { Name = reader["Name"].ToString(), SchemaName = reader["SchemaName"].ToString() });
+    //                            }
+    //                        }
+
+
+    //                }
+
+
+    //            }
+    //        }
+    //        return Result;
+    //    }
+
+    //    public static List<ListModel> ExecuteSp(string query,string spName, bool OnlyEcecute = false)
+    //    {
+    //        CreateProcedure(query, spName);
+    //        List<ListModel> Result = new List<ListModel>();
+
+    //        //  SqlParameter[] parameters = new SqlParameter[]
+    //        using (SqlConnection con = new SqlConnection(_connectionString))
+    //        {
+    //            using (SqlCommand cmd = con.CreateCommand())
+    //            {
+    //                cmd.CommandText = "spGetSchema";//Stored Procedure name
+    //                cmd.CommandType = CommandType.StoredProcedure;
+
+    //                con.Open();
+
+    //                using (SqlDataReader rdr = cmd.ExecuteReader())
+    //                {
+    //                    while (rdr.Read())
+    //                    {
+    //                        Result.Add(new ListModel() { Name = rdr["Name"].ToString(), SchemaName = rdr["SchemaName"].ToString() });
+    //                        //sb.AppendLine(rdr["Text"].ToString());
+    //                        /* 
+    //                            You will get the CREATE PROC text here
+    //                            Do what you need to with it. For example, write
+    //                            to a .sql file
+    //                        */
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        DropProcedure(spName);
+    //        return Result;
+    //    }
+
+    //    private static void CreateProcedure(string query, string spName)
+    //    {
+    //        StringBuilder CreateProceduresb = new StringBuilder();
+    //        CreateProceduresb.AppendLine($"CREATE OR ALTER PROC {spName} ");
+    //        CreateProceduresb.AppendLine("AS");
+    //        CreateProceduresb.AppendLine("BEGIN");
+    //        CreateProceduresb.AppendLine(query);
+    //        CreateProceduresb.AppendLine("END");
+    //        SqlExecute.ExecuteQuery(CreateProceduresb.ToString(), true);
+    //    }
+
+    //    private static void DropProcedure( string spName)
+    //    {
+    //        StringBuilder DropProceduresb = new StringBuilder();
+    //        DropProceduresb.AppendLine($"DROP PROC {spName} ");
+    //        SqlExecute.ExecuteQuery(DropProceduresb.ToString(), true);
+    //    }
+    //}
 }

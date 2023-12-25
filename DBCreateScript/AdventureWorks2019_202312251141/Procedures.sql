@@ -1,5 +1,17 @@
 USE [CopyOfAdventureWorks2019]
 GO
+IF EXISTS(SELECT 1 FROM sys.Procedures WHERE[object_id] = OBJECT_ID('[dbo].[GetSynonym]')) DROP PROCEDURE [dbo].[GetSynonym]
+GO
+Create   PROC GetSynonym
+
+AS
+
+select sy.name [Name],sc.name [SchemaName],sy.base_object_name [Refrence] from sys.synonyms sy
+
+inner join sys.schemas sc on sc.schema_id=sy.schema_id
+
+
+GO
 IF EXISTS(SELECT 1 FROM sys.Procedures WHERE[object_id] = OBJECT_ID('[dbo].[regression]')) DROP PROCEDURE [dbo].[regression]
 GO
 CREATE   PROCEDURE [dbo].[regression]
@@ -23,6 +35,24 @@ where ProductID= @packagetypeid', N'@packagetypeid int', @packagetypeid =@packag
 END
 
 END
+
+GO
+IF EXISTS(SELECT 1 FROM sys.Procedures WHERE[object_id] = OBJECT_ID('[dbo].[spGetSchema]')) DROP PROCEDURE [dbo].[spGetSchema]
+GO
+CREATE   PROC spGetSchema 
+
+AS
+
+BEGIN
+
+select [name] [Name],'' AS SchemaName from sys.schemas
+
+where principal_id=1 and name<>'dbo'
+
+
+
+END
+
 
 GO
 IF EXISTS(SELECT 1 FROM sys.Procedures WHERE[object_id] = OBJECT_ID('[dbo].[spGetTableScript]')) DROP PROCEDURE [dbo].[spGetTableScript]
