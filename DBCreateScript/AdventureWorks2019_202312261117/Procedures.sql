@@ -173,7 +173,7 @@ SELECT @SQL = 'CREATE TABLE ' + @object_name + CHAR(13) + '(' + CHAR(13) + STUFF
 
                 END +
 
-                CASE WHEN c.collation_name IS NOT NULL THEN ' COLLATE ' + c.collation_name ELSE '' END +
+                CASE WHEN (c.collation_name IS NOT NULL AND  c.user_type_id=c.system_type_id) THEN ' COLLATE ' + c.collation_name ELSE '' END +
 
                 CASE WHEN c.is_nullable = 1 THEN ' NULL' ELSE ' NOT NULL' END +
 

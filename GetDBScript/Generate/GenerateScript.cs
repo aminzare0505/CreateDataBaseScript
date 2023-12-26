@@ -17,6 +17,7 @@ namespace GetDBScript
         public void Generate()
         {
             CreateSchemaScript();
+            CreateTypeScript();
             CreateTableScript();
             CreateSynonymsScript();
             CreateViewScript();

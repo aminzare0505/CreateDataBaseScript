@@ -54,6 +54,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="SQLQueries\GetTables.sql" />
     <Compile Include="Services\CreateScript.cs" />
+    <Compile Include="Services\DataRecordExtensions.cs" />
     <Compile Include="SQLQueries\SQLQueryFactory.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="SQLQueries\GetFunctions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SQLQueries\GetTypes.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

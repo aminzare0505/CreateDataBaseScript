@@ -117,6 +117,20 @@ namespace GetDBScript.Services
             _allScriptSb.AppendLine(FunctionSb.ToString());
             utility.SaveFile(utility.GetFilePath("Functions", _folderPath), FunctionSb.ToString());
         }
+        public void CreateTypeScript()
+        {
+            StringBuilder TypeSb = new StringBuilder();
+            TypeSb.AppendLine($"USE [{NewDataBaseName}]");
+            TypeSb.AppendLine($"GO");
+            var Types = new DataSource().GetAllType();
+            foreach (var Type in Types)
+            {
+                TypeSb.AppendLine(Type.Refrence);
+                TypeSb.AppendLine("GO");
+            }
+            _allScriptSb.AppendLine(TypeSb.ToString());
+            utility.SaveFile(utility.GetFilePath("Types", _folderPath), TypeSb.ToString());
+        }
         public void CreateAllScript()
         {
             utility.SaveFile(utility.GetFilePath("All", _folderPath), _allScriptSb.ToString());

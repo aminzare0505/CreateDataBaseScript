@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GetDBScript.Services;
 
 namespace GetDBScript.DataSourse
 {
@@ -69,7 +70,14 @@ namespace GetDBScript.DataSourse
                     {
                         while (rdr.Read())
                         {
-                            Result.Add(new ListModel() { Name = rdr["Name"].ToString(), SchemaName = rdr["SchemaName"].ToString() });
+                            var model = new ListModel();
+                            model.Name = rdr["Name"].ToString();
+                            model.SchemaName = rdr["SchemaName"].ToString();
+                            if (rdr.HasColumn("SqlCreateUdt"))
+                                model.Refrence = rdr["SqlCreateUdt"].ToString();
+                            if (rdr.HasColumn("Refrence"))
+                                model.Refrence = rdr["Refrence"].ToString();
+                            Result.Add(model);
                             //sb.AppendLine(rdr["Text"].ToString());
                             /* 
                                 You will get the CREATE PROC text here

@@ -43,6 +43,10 @@ namespace GetDBScript
         {
             return SqlExecute.ExecuteProcedure("GetFunctions");
         }
+        public List<ListModel> GetAllType()
+        {
+            return SqlExecute.ExecuteProcedure("GetTypes");
+        }
 
         public string GetTableScript(string tableName, string schema)
         {
@@ -103,6 +107,15 @@ namespace GetDBScript
             SqlExecute.GetFunctionScript(functionName, schema, sb);
             return sb.ToString();
         }
+
+        //public string GetTypeScript(string typeName, string schema)
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    sb.AppendLine($"DROP FUNCTION IF EXISTS [{schema}].[{functionName}]");
+        //    sb.AppendLine("GO");
+        //    SqlExecute.GetFunctionScript(functionName, schema, sb);
+        //    return sb.ToString();
+        //}
 
 
 
